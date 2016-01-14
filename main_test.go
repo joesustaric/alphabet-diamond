@@ -6,12 +6,10 @@ import (
 )
 
 type mockWriter struct {
-	bytes.Buffer
 }
 
 func TestDrawTheDumbDiamond(t *testing.T) {
 	input := NewLetters("A", "B", "C", "D", "E")
-
 	expected := `
     A
    B B
@@ -25,14 +23,12 @@ E       E
 
 `
 
-	mw := &mockWriter{}
+	buffer := new(bytes.Buffer)
 
-	DrawTheDumbDiamond(mw, input)
+	DrawTheDumbDiamond(buffer, input)
 
-	// fmt.Println(mw.String())
-
-	if mw.String() != expected {
-		t.Errorf("got \n %s, Expected \n %s", mw.String(), expected)
+	if buffer.String() != expected {
+		t.Errorf("got \n %s, Expected \n %s", buffer.String(), expected)
 	}
 
 }
@@ -97,6 +93,7 @@ func TestGetLettersForTheDiamond(t *testing.T) {
 		{"E", Letters{First: "A", Second: "B", Third: "C", Fourth: "D", Fifth: "E"}},
 		{"A", Letters{First: "W", Second: "X", Third: "Y", Fourth: "Z", Fifth: "A"}},
 		{"B", Letters{First: "X", Second: "Y", Third: "Z", Fourth: "A", Fifth: "B"}},
+		{"D", Letters{First: "Z", Second: "A", Third: "B", Fourth: "C", Fifth: "D"}},
 		{"Z", Letters{First: "V", Second: "W", Third: "X", Fourth: "Y", Fifth: "Z"}},
 	}
 

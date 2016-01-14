@@ -19,8 +19,9 @@ var letter *string
 var alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
 const (
-	inputStringSize = 1
-	diamondTemplate = `
+	inputStringSize      = 1
+	maxLettersForDiamond = 5
+	diamondTemplate      = `
     {{.First}}
    {{.Second}} {{.Second}}
   {{.Third}}   {{.Third}}
@@ -62,7 +63,7 @@ func GetDiamondLetters(seed string) Letters {
 
 	letters = figureOutLettersForDiamond(splitAlphabet[0], letters)
 
-	if len(letters) != 4 {
+	if len(letters) != maxLettersForDiamond {
 		letters = figureOutLettersForDiamond(splitAlphabet[1], letters)
 	}
 	return NewLetters(letters[4], letters[3], letters[2], letters[1], letters[0])
@@ -77,7 +78,7 @@ func DrawTheDumbDiamond(out io.Writer, letters Letters) {
 }
 
 func figureOutLettersForDiamond(letterSplitSet string, letters []string) []string {
-	if len(letters) < 4 { //Magic Number fix
+	if len(letters) < maxLettersForDiamond {
 		for i := len(letterSplitSet) - 1; i >= 0; i-- {
 			letters = append(letters, string(letterSplitSet[i]))
 			if len(letters) == 5 {

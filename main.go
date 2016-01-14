@@ -84,7 +84,7 @@ func GetDiamondLetters(inputLetter string) Letters {
 
 //DrawTheDumbDiamond will draw James amazing diamond figure given it has an object
 //which satisfies the writer interface. stdout / file / socket where ever you want
-//to see this majestic diamond to fufull all your diamond fantasy's.
+//to see this majestic diamond to fulfill all your diamond fantasy's.
 func DrawTheDumbDiamond(out io.Writer, letters Letters) {
 
 	if t, err := template.New("diamond").Parse(diamondTemplate); err != nil {

@@ -14,7 +14,6 @@ E       E
   C   C  
    B B  
     A  
-
 ```
 Think of all the amazing things you can do with this! You soon will be rolling in it...
 

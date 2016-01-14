@@ -8,6 +8,7 @@ import (
 	"regexp"
 	"strings"
 	"text/template"
+	"time"
 )
 
 var letter *string
@@ -51,6 +52,7 @@ func NewLetters(first, second, third, fourth, fifth string) Letters {
 }
 
 func main() {
+	start := time.Now()
 
 	if input, err := Parse(*letter); err != nil {
 		fmt.Println(err.Error())
@@ -58,6 +60,8 @@ func main() {
 		DrawTheDumbDiamond(os.Stdout, GetDiamondLetters(input))
 	}
 
+	duration := time.Now().Sub(start)
+	fmt.Printf("Done in %s. Boom!\n", duration)
 }
 
 //GetDiamondLetters will figure out from a input letter [A-Z] the other letters

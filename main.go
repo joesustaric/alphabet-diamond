@@ -44,8 +44,35 @@ func main() {
 		fmt.Println(err.Error())
 	} else {
 		fmt.Printf("letter = %s \n", input)
+
 	}
 
+}
+
+func GetDiamondLetters(seed string) Letters {
+
+	splitAlphabet := strings.Split(alphabet, seed)
+
+	letters := []string{seed}
+
+	letters = figureOutLettersForDiamond(splitAlphabet[0], letters)
+
+	if len(letters) != 4 {
+		letters = figureOutLettersForDiamond(splitAlphabet[1], letters)
+	}
+	return NewLetters(letters[4], letters[3], letters[2], letters[1], letters[0])
+}
+
+func figureOutLettersForDiamond(letterSplitSet string, letters []string) []string {
+	if len(letters) < 4 { //Magic Number fix
+		for i := len(letterSplitSet) - 1; i >= 0; i-- {
+			letters = append(letters, string(letterSplitSet[i]))
+			if len(letters) == 5 {
+				return letters
+			}
+		}
+	}
+	return letters
 }
 
 func Parse(input string) (string, error) {
@@ -58,37 +85,6 @@ func Parse(input string) (string, error) {
 	}
 
 	return strings.ToUpper(r), nil
-}
-
-func GetDiamondLetters(seed string) Letters {
-
-	r := strings.Split(alphabet, seed)
-
-	var letters []string
-	count := 0
-	letters = append(letters, seed)
-
-	for i := len(r[0]) - 1; i >= 0; i-- {
-		letters = append(letters, string(r[0][i]))
-		count++
-		if count == 4 {
-			break
-		}
-	}
-
-	if len(letters) != 4 {
-		for i := len(r[1]) - 1; i > 0; i-- {
-			letters = append(letters, string(r[1][i]))
-			count++
-			if count == 4 {
-				break
-			}
-
-		}
-	}
-
-	return NewLetters(letters[4], letters[3], letters[2], letters[1], letters[0])
-
 }
 
 func notCorrectLength(input string) bool {

@@ -24,16 +24,16 @@ Think of all the amazing things you can do with this! You soon will be rolling i
 ** You must have golang installed version 1.x **  
 Go [here](https://golang.org/dl/) to install.
 
-Then use the `./go` script.
+Then use the `./go.sh` script.
 
 Run tests  
-`./go test`  
+`./go.sh test`  
 
-Run app, like so `./go run <input>`
+Run app, like so `./go.sh run <input>`
 ```  
 
-./go run A
-./go run E
+./go.sh run A
+./go.sh run E
 ...
 ```  
 

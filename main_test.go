@@ -1,6 +1,41 @@
 package main
 
-import "testing"
+import (
+	"bytes"
+	"testing"
+)
+
+type mockWriter struct {
+	bytes.Buffer
+}
+
+func TestDrawTheDumbDiamond(t *testing.T) {
+	input := NewLetters("A", "B", "C", "D", "E")
+
+	expected := `
+    A
+   B B
+  C   C
+ D     D
+E       E
+ D     D
+  C   C
+   B B
+    A
+
+`
+
+	mw := &mockWriter{}
+
+	DrawTheDumbDiamond(mw, input)
+
+	// fmt.Println(mw.String())
+
+	if mw.String() != expected {
+		t.Errorf("got \n %s, Expected \n %s", mw.String(), expected)
+	}
+
+}
 
 func TestParse(t *testing.T) {
 
@@ -55,7 +90,6 @@ func TestParse(t *testing.T) {
 }
 
 func TestGetLettersForTheDiamond(t *testing.T) {
-
 	var happyTests = []struct {
 		input    string
 		expected Letters
@@ -73,7 +107,6 @@ func TestGetLettersForTheDiamond(t *testing.T) {
 				test.input, test.expected, result)
 		}
 	}
-
 }
 
 func areNotEqual(result Letters, expected Letters) bool {

@@ -3,25 +3,34 @@ package main
 import (
 	"flag"
 	"fmt"
+	"io"
+	"os"
 	"regexp"
 	"strings"
+	"text/template"
 )
+
+func init() {
+	letter = flag.String("letter", "", "The letter which is the middle of the diamond.")
+	flag.Parse()
+}
 
 var letter *string
 var alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
 const (
 	inputStringSize = 1
-	diamond         = `
-{{.First}}
-{{.Second}} {{.Second}}
-{{.Third}} {{.Fourth}}
-{{.Fifth}} {{.Fifth}}
-{{.Sixth}} {{.Sixth}}
-{{.Fifth}} {{.Fifth}}
-{{.Third}} {{.Fourth}}
-{{.Second}} {{.Second}}
-{{.First}}
+	diamondTemplate = `
+    {{.First}}
+   {{.Second}} {{.Second}}
+  {{.Third}}   {{.Third}}
+ {{.Fourth}}     {{.Fourth}}
+{{.Fifth}}       {{.Fifth}}
+ {{.Fourth}}     {{.Fourth}}
+  {{.Third}}   {{.Third}}
+   {{.Second}} {{.Second}}
+    {{.First}}
+
 `
 )
 
@@ -33,18 +42,14 @@ func NewLetters(first, second, third, fourth, fifth string) Letters {
 	return Letters{First: first, Second: second, Third: third, Fourth: fourth, Fifth: fifth}
 }
 
-func init() {
-	letter = flag.String("letter", "", "The letter which is the middle of the diamond.")
-	flag.Parse()
-}
-
 func main() {
 
 	if input, err := Parse(*letter); err != nil {
 		fmt.Println(err.Error())
 	} else {
-		fmt.Printf("letter = %s \n", input)
+		l := GetDiamondLetters(input)
 
+		DrawTheDumbDiamond(os.Stdout, l)
 	}
 
 }
@@ -61,6 +66,14 @@ func GetDiamondLetters(seed string) Letters {
 		letters = figureOutLettersForDiamond(splitAlphabet[1], letters)
 	}
 	return NewLetters(letters[4], letters[3], letters[2], letters[1], letters[0])
+}
+
+func DrawTheDumbDiamond(out io.Writer, letters Letters) {
+	t, err := template.New("diamond").Parse(diamondTemplate)
+	if err != nil {
+		panic(err)
+	}
+	t.Execute(out, letters)
 }
 
 func figureOutLettersForDiamond(letterSplitSet string, letters []string) []string {

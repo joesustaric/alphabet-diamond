@@ -96,6 +96,7 @@ func DrawTheDumbDiamond(out io.Writer, letters Letters) {
 }
 
 func figureOutLettersForDiamond(letterSplitSet string, letters []string) []string {
+	//traverse backwards
 	for i := len(letterSplitSet) - 1; i >= 0; i-- {
 		if len(letters) == maxLettersForDiamond {
 			return letters

@@ -8,6 +8,7 @@ import (
 type mockWriter struct {
 }
 
+//Test to ensure the output display is correct
 func TestDrawTheDumbDiamond(t *testing.T) {
 	input := NewLetters("A", "B", "C", "D", "E")
 	expected := `
@@ -33,6 +34,7 @@ E       E
 
 }
 
+//Test to ensure the input argument is parsed correctly
 func TestParse(t *testing.T) {
 
 	var happyTests = []struct {
@@ -85,6 +87,7 @@ func TestParse(t *testing.T) {
 	}
 }
 
+//Tests to figure out the letters to print on the diamond
 func TestGetLettersForTheDiamond(t *testing.T) {
 	var happyTests = []struct {
 		input    string
@@ -106,6 +109,7 @@ func TestGetLettersForTheDiamond(t *testing.T) {
 	}
 }
 
+//a custom assertion for the Letter type
 func areNotEqual(result Letters, expected Letters) bool {
 	if result.First != expected.First {
 		return true

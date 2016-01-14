@@ -10,12 +10,13 @@ import (
 	"text/template"
 )
 
+var letter *string
+
 func init() {
-	letter = flag.String("letter", "", "The letter which is the middle of the diamond.")
+	letter = flag.String("i", "", "The letter which is the middle of the diamond.")
 	flag.Parse()
 }
 
-var letter *string
 var alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
 const (
@@ -35,12 +36,18 @@ const (
 `
 )
 
+//Letters is used as an input for the template for the diamond output.
 type Letters struct {
 	First, Second, Third, Fourth, Fifth string
 }
 
+//NewLetters will give you a new Letter object.
 func NewLetters(first, second, third, fourth, fifth string) Letters {
-	return Letters{First: first, Second: second, Third: third, Fourth: fourth, Fifth: fifth}
+	return Letters{First: first,
+		Second: second,
+		Third:  third,
+		Fourth: fourth,
+		Fifth:  fifth}
 }
 
 func main() {
@@ -48,47 +55,54 @@ func main() {
 	if input, err := Parse(*letter); err != nil {
 		fmt.Println(err.Error())
 	} else {
-		l := GetDiamondLetters(input)
-
-		DrawTheDumbDiamond(os.Stdout, l)
+		DrawTheDumbDiamond(os.Stdout, GetDiamondLetters(input))
 	}
 
 }
 
-func GetDiamondLetters(seed string) Letters {
+//GetDiamondLetters will figure out from a input letter [A-Z] the other letters
+//that need to be used to display in the diamond template.
+//It returns a Letter obejct initalised with the correct values.
+func GetDiamondLetters(inputLetter string) Letters {
 
-	splitAlphabet := strings.Split(alphabet, seed)
+	splitAlphabet, letters := strings.Split(alphabet, inputLetter), []string{inputLetter}
 
-	letters := []string{seed}
-
-	letters = figureOutLettersForDiamond(splitAlphabet[0], letters)
-
-	if len(letters) != maxLettersForDiamond {
-		letters = figureOutLettersForDiamond(splitAlphabet[1], letters)
+	for _, characterSet := range splitAlphabet {
+		letters = figureOutLettersForDiamond(characterSet, letters)
 	}
-	return NewLetters(letters[4], letters[3], letters[2], letters[1], letters[0])
+
+	if len(letters) == maxLettersForDiamond {
+		return NewLetters(letters[4], letters[3], letters[2], letters[1], letters[0])
+	}
+
+	return Letters{}
 }
 
+//DrawTheDumbDiamond will draw James amazing diamond figure given it has an object
+//which satisfies the writer interface. stdout / file / socket where ever you want
+//to see this majestic diamond to fufull all your diamond fantasy's.
 func DrawTheDumbDiamond(out io.Writer, letters Letters) {
-	t, err := template.New("diamond").Parse(diamondTemplate)
-	if err != nil {
+
+	if t, err := template.New("diamond").Parse(diamondTemplate); err != nil {
 		panic(err)
+	} else {
+		t.Execute(out, letters)
 	}
-	t.Execute(out, letters)
+
 }
 
 func figureOutLettersForDiamond(letterSplitSet string, letters []string) []string {
-	if len(letters) < maxLettersForDiamond {
-		for i := len(letterSplitSet) - 1; i >= 0; i-- {
-			letters = append(letters, string(letterSplitSet[i]))
-			if len(letters) == 5 {
-				return letters
-			}
+	for i := len(letterSplitSet) - 1; i >= 0; i-- {
+		if len(letters) == maxLettersForDiamond {
+			return letters
 		}
+		letters = append(letters, string(letterSplitSet[i]))
 	}
 	return letters
 }
 
+//Parse takes a string input and will return the sanitised string alphabet
+//character. It will return an error if the input was not parsed correctly.
 func Parse(input string) (string, error) {
 	r := strings.TrimSpace(input)
 
@@ -109,8 +123,7 @@ func notCorrectLength(input string) bool {
 }
 
 func notAlphabetCharacter(input string) bool {
-	matched, err := regexp.MatchString("[a-z|A-Z]", input)
-	if !matched || err != nil {
+	if matched, err := regexp.MatchString("[a-z|A-Z]", input); !matched || err != nil {
 		return true
 	}
 	return false

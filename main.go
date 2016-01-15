@@ -18,9 +18,8 @@ func init() {
 	flag.Parse()
 }
 
-var alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-
 const (
+	alphabet             = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 	inputStringSize      = 1
 	maxLettersForDiamond = 5
 	diamondTemplate      = `
@@ -59,11 +58,20 @@ type DiamondInfo struct {
 	IsA          bool
 }
 
-func NewDiamondInfo(middleLetter string, middleWidth int) DiamondInfo {
+func NewDiamondInfo(middleLetter string) DiamondInfo {
 	if middleLetter == "A" {
-		return DiamondInfo{MiddleLetter: middleLetter, MiddleWidth: middleWidth, IsA: true}
+		return DiamondInfo{MiddleLetter: middleLetter,
+			MiddleWidth: 0,
+			IsA:         true}
 	}
-	return DiamondInfo{MiddleLetter: middleLetter, MiddleWidth: middleWidth, IsA: false}
+	return DiamondInfo{MiddleLetter: middleLetter,
+		MiddleWidth: figureOutTheWidth(middleLetter),
+		IsA:         false}
+}
+
+func figureOutTheWidth(letter string) int {
+	letterNumber := strings.Index(alphabet, letter)
+	return (letterNumber * 2) - 2
 }
 
 func main() {
@@ -72,7 +80,7 @@ func main() {
 	if input, err := Parse(*letter); err != nil {
 		fmt.Println(err.Error())
 	} else {
-		DrawTheDumbDiamond(os.Stdout, GetDiamondLetters(input))
+		DrawD(os.Stdout, NewDiamondInfo(input))
 	}
 
 	duration := time.Now().Sub(start)
@@ -92,7 +100,8 @@ func DrawD(out io.Writer, diamondInfo DiamondInfo) {
 
 	for i := len(splitAlphabet[0]) - 1; i >= 0; i-- {
 		leftPadding++
-		bottom = bottom + printDiamondLine(leftPadding, ((i*2)-2), string(splitAlphabet[0][i]))
+		l := string(splitAlphabet[0][i])
+		bottom = bottom + printDiamondLine(leftPadding, figureOutTheWidth(l), l)
 	}
 
 	top := "\n" + reverse(bottom)

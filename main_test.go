@@ -11,8 +11,8 @@ func TestNewDiamondInfo(t *testing.T) {
 		input    DiamondInfo
 		expected DiamondInfo
 	}{
-		{NewDiamondInfo("A", 0), DiamondInfo{MiddleLetter: "A", IsA: true, MiddleWidth: 0}},
-		{NewDiamondInfo("Z", 48), DiamondInfo{MiddleLetter: "Z", IsA: false, MiddleWidth: 48}},
+		{NewDiamondInfo("A"), DiamondInfo{MiddleLetter: "A", IsA: true, MiddleWidth: 0}},
+		{NewDiamondInfo("Z"), DiamondInfo{MiddleLetter: "Z", IsA: false, MiddleWidth: 48}},
 	}
 
 	for _, test := range happyTests {

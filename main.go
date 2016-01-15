@@ -18,14 +18,13 @@ func init() {
 }
 
 const (
-	alphabet             = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-	inputStringSize      = 1
-	maxLettersForDiamond = 5
-	newLine              = "\n"
-	letterA              = "A"
-	letterAPaddingCalc   = -2
-	widthOffset          = 2
-	widthMultiplyFactor  = 2
+	alphabet            = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+	inputStringSize     = 1
+	newLine             = "\n"
+	letterA             = "A"
+	letterAPaddingCalc  = -2
+	widthOffset         = 2
+	widthMultiplyFactor = 2
 )
 
 //DiamondInfo contains all the information to print the diamond. The middle letter

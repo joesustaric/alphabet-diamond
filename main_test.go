@@ -11,22 +11,23 @@ func TestNewDiamondInfo(t *testing.T) {
 		input    DiamondInfo
 		expected DiamondInfo
 	}{
-		{NewDiamondInfo("A"), DiamondInfo{MiddleLetter: "A", IsA: true, MiddleWidth: 0}},
-		{NewDiamondInfo("Z"), DiamondInfo{MiddleLetter: "Z", IsA: false, MiddleWidth: 48}},
+		{NewDiamondInfo("A"), DiamondInfo{MiddleLetter: "A", IsLetterA: true, MiddleWidth: 0}},
+		{NewDiamondInfo("Z"), DiamondInfo{MiddleLetter: "Z", IsLetterA: false, MiddleWidth: 48}},
 	}
 
 	for _, test := range happyTests {
-		if areNotEqualx(test.input, test.expected) {
-			t.Errorf("Expected %s \n Got %s \n", test.expected, test.input)
+		if areNotEqual(test.input, test.expected) {
+			t.Errorf("Expected %v \n Got %v \n", test.expected, test.input)
 		}
 	}
 }
 
 //Test to ensure the output display is correct
-func TestDrawTheDumbDiamond(t *testing.T) {
+func TestDrawJamesAPrettyDiamond(t *testing.T) {
 	var expectedE, expectedZ []byte
 	var err error
 
+	// load the expected output from files
 	if expectedE, err = ioutil.ReadFile("testEDiamond.txt"); err != nil {
 		t.Errorf("Could not read from file '%s'", "testEDiamond.txt")
 	} else if expectedZ, err = ioutil.ReadFile("testZDiamond.txt"); err != nil {
@@ -37,14 +38,14 @@ func TestDrawTheDumbDiamond(t *testing.T) {
 		input    DiamondInfo
 		expected string
 	}{
-		{DiamondInfo{MiddleLetter: "A", IsA: true, MiddleWidth: 0}, "A"},
-		{DiamondInfo{MiddleLetter: "E", IsA: false, MiddleWidth: 6}, string(expectedE)},
-		{DiamondInfo{MiddleLetter: "Z", IsA: false, MiddleWidth: 48}, string(expectedZ)},
+		{DiamondInfo{MiddleLetter: "A", IsLetterA: true, MiddleWidth: 0}, "A\n"},
+		{DiamondInfo{MiddleLetter: "E", IsLetterA: false, MiddleWidth: 6}, string(expectedE)},
+		{DiamondInfo{MiddleLetter: "Z", IsLetterA: false, MiddleWidth: 48}, string(expectedZ)},
 	}
 
 	for _, test := range happyTests {
 		buffer := new(bytes.Buffer)
-		DrawD(buffer, test.input)
+		DrawJamesAPrettyDiamond(buffer, test.input)
 		if test.expected != buffer.String() {
 			t.Errorf("Expected \n(%s)\n Got \n(%s)\n", test.expected, buffer.String())
 		}
@@ -105,52 +106,14 @@ func TestParse(t *testing.T) {
 	}
 }
 
-//Tests to figure out the letters to print on the diamond
-func TestGetLettersForTheDiamond(t *testing.T) {
-	var happyTests = []struct {
-		input    string
-		expected Letters
-	}{
-		{"E", Letters{First: "A", Second: "B", Third: "C", Fourth: "D", Fifth: "E"}},
-		{"A", Letters{First: "W", Second: "X", Third: "Y", Fourth: "Z", Fifth: "A"}},
-		{"B", Letters{First: "X", Second: "Y", Third: "Z", Fourth: "A", Fifth: "B"}},
-		{"D", Letters{First: "Z", Second: "A", Third: "B", Fourth: "C", Fifth: "D"}},
-		{"Z", Letters{First: "V", Second: "W", Third: "X", Fourth: "Y", Fifth: "Z"}},
-	}
-
-	for _, test := range happyTests {
-		result := GetDiamondLetters(test.input)
-		if areNotEqual(result, test.expected) {
-			t.Errorf("Fail Input=%s ,expected=%s ,result=%v \n",
-				test.input, test.expected, result)
-		}
-	}
-}
-
-func areNotEqualx(item1, item2 DiamondInfo) bool {
-	if item1.IsA != item2.IsA {
+//a custom assertion for the Letter type
+func areNotEqual(item1, item2 DiamondInfo) bool {
+	if item1.IsLetterA != item2.IsLetterA {
 		return true
 	} else if item1.MiddleLetter != item2.MiddleLetter {
 		return true
 	} else if item1.MiddleWidth != item2.MiddleWidth {
 		return true
 	}
-	return false
-}
-
-//a custom assertion for the Letter type
-func areNotEqual(result Letters, expected Letters) bool {
-	if result.First != expected.First {
-		return true
-	} else if result.Second != expected.Second {
-		return true
-	} else if result.Third != expected.Third {
-		return true
-	} else if result.Fourth != expected.Fourth {
-		return true
-	} else if result.Fifth != expected.Fifth {
-		return true
-	}
-
 	return false
 }

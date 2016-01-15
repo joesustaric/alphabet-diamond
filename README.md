@@ -1,8 +1,10 @@
 # Majestic Diamond Challenge
 
+[![Build Status](https://travis-ci.org/joesustaric/alphabet-diamond.svg?branch=master)](https://travis-ci.org/joesustaric/alphabet-diamond)  
+
 Here lies an amazing application to draw diamonds from a given input letter.  
 
-e.g if you run this program with input `E` your output will be..  
+e.g if you run this program with input `e` or `E` your output will be..  
 
 ```   
     A  

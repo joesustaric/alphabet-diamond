@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"io/ioutil"
 	"testing"
 )
 
@@ -11,7 +12,7 @@ func TestNewDiamondInfo(t *testing.T) {
 		expected DiamondInfo
 	}{
 		{NewDiamondInfo("A", 0), DiamondInfo{MiddleLetter: "A", IsA: true, MiddleWidth: 0}},
-		{NewDiamondInfo("Z", 47), DiamondInfo{MiddleLetter: "Z", IsA: false, MiddleWidth: 47}},
+		{NewDiamondInfo("Z", 48), DiamondInfo{MiddleLetter: "Z", IsA: false, MiddleWidth: 48}},
 	}
 
 	for _, test := range happyTests {
@@ -23,81 +24,29 @@ func TestNewDiamondInfo(t *testing.T) {
 
 //Test to ensure the output display is correct
 func TestDrawTheDumbDiamond(t *testing.T) {
-	// 	input := NewLetters("A", "B", "C", "D", "E")
-	// 	expectedZ := `
-	// 		                       A
-	// 	                        B B
-	// 	                       C   C
-	// 	                      D     D
-	// 	                     E       E
-	// 	                    F         F
-	// 	                   G           G
-	// 	                  H             H
-	// 	                 I               I
-	// 	                J                 J
-	// 	               K                   K
-	// 	              L                     L
-	// 	             M                       M
-	// 	            N                         N
-	// 	           O                           O
-	// 	          P                             P
-	// 	         Q                               Q
-	// 	        R                                 R
-	// 	       S                                   S
-	// 	      T                                     T
-	// 	     U                                       U
-	// 	    V                                         V
-	// 	   W                                           W
-	// 	  X                                             X
-	// 	 Y                                               Y
-	// 	Z                                                 Z
-	// 	 Y                                               Y
-	// 	  X                                             X
-	// 	   W                                           W
-	// 	    V                                         V
-	// 	     U                                       U
-	// 	      T                                     T
-	// 	       S                                   S
-	// 	        R                                 R
-	// 	         Q                               Q
-	// 	          P                             P
-	// 	           O                           O
-	// 	            N                         N
-	// 	             M                       M
-	// 	              L                     L
-	// 	               K                   K
-	// 	                J                 J
-	// 	                 I               I
-	// 	                  H             H
-	// 	                   G           G
-	// 	                    F         F
-	// 	                     E       E
-	// 	                      D     D
-	// 	                       C   C
-	// 	                        B B
-	// 		                       A
-	// `
+	var expectedE, expectedZ []byte
+	var err error
 
-	// buffer := new(bytes.Buffer)
-	//
-	// DrawTheDumbDiamond(buffer, input)
-	//
-	// if buffer.String() != expected {
-	// 	t.Errorf("got \n %s, Expected \n %s", buffer.String(), expected)
-	// }
+	if expectedE, err = ioutil.ReadFile("testEDiamond.txt"); err != nil {
+		t.Errorf("Could not read from file '%s'", "testEDiamond.txt")
+	} else if expectedZ, err = ioutil.ReadFile("testZDiamond.txt"); err != nil {
+		t.Errorf("Could not read from file '%s'", "testZDiamond.txt")
+	}
 
 	var happyTests = []struct {
 		input    DiamondInfo
 		expected string
 	}{
 		{DiamondInfo{MiddleLetter: "A", IsA: true, MiddleWidth: 0}, "A"},
+		{DiamondInfo{MiddleLetter: "E", IsA: false, MiddleWidth: 6}, string(expectedE)},
+		{DiamondInfo{MiddleLetter: "Z", IsA: false, MiddleWidth: 48}, string(expectedZ)},
 	}
 
 	for _, test := range happyTests {
 		buffer := new(bytes.Buffer)
 		DrawD(buffer, test.input)
-		if buffer.String() != test.expected {
-			t.Errorf("Expected %s \n Got %s \n", test.expected, buffer.String())
+		if test.expected != buffer.String() {
+			t.Errorf("Expected \n(%s)\n Got \n(%s)\n", test.expected, buffer.String())
 		}
 	}
 

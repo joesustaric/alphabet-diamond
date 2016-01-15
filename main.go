@@ -80,7 +80,50 @@ func main() {
 }
 
 func DrawD(out io.Writer, diamondInfo DiamondInfo) {
-	out.Write([]byte{'A'})
+	if diamondInfo.IsA {
+		out.Write([]byte("A"))
+		return
+	}
+
+	splitAlphabet := strings.Split(alphabet, diamondInfo.MiddleLetter)
+	leftPadding := 0
+	middle := "\n" + printDiamondLine(leftPadding, diamondInfo.MiddleWidth, diamondInfo.MiddleLetter)
+	bottom := ""
+
+	for i := len(splitAlphabet[0]) - 1; i >= 0; i-- {
+		leftPadding++
+		bottom = bottom + printDiamondLine(leftPadding, ((i*2)-2), string(splitAlphabet[0][i]))
+	}
+
+	top := "\n" + reverse(bottom)
+
+	out.Write([]byte(top + middle + bottom + "\n"))
+}
+
+func reverse(s string) string {
+	r := []rune(s)
+	for i, j := 0, len(r)-1; i < len(r)/2; i, j = i+1, j-1 {
+		r[j], r[i] = r[i], r[j]
+	}
+	return string(r)
+}
+
+func printDiamondLine(leftPadding, widthPadding int, letter string) string {
+	result := ""
+	for i := 0; i < leftPadding; i++ {
+		result = result + " "
+	}
+	rightPadding := result
+	result = result + letter
+	for i := 0; i <= widthPadding; i++ {
+		result = result + " "
+	}
+
+	if widthPadding == -2 {
+		return result + rightPadding
+	}
+
+	return result + letter + rightPadding + "\n"
 }
 
 //GetDiamondLetters will figure out from a input letter [A-Z] the other letters

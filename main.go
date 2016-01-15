@@ -51,6 +51,21 @@ func NewLetters(first, second, third, fourth, fifth string) Letters {
 		Fifth:  fifth}
 }
 
+//DiamondInfo contains all the information to print the diamond. The middle letter
+//The width of the middle of the diamond and 1 edge case which is A.
+type DiamondInfo struct {
+	MiddleWidth  int
+	MiddleLetter string
+	IsA          bool
+}
+
+func NewDiamondInfo(middleLetter string, middleWidth int) DiamondInfo {
+	if middleLetter == "A" {
+		return DiamondInfo{MiddleLetter: middleLetter, MiddleWidth: middleWidth, IsA: true}
+	}
+	return DiamondInfo{MiddleLetter: middleLetter, MiddleWidth: middleWidth, IsA: false}
+}
+
 func main() {
 	start := time.Now()
 
@@ -62,6 +77,10 @@ func main() {
 
 	duration := time.Now().Sub(start)
 	fmt.Printf("Done in %s. Boom!\n", duration)
+}
+
+func DrawD(out io.Writer, diamondInfo DiamondInfo) {
+	out.Write([]byte{'A'})
 }
 
 //GetDiamondLetters will figure out from a input letter [A-Z] the other letters

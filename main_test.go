@@ -5,31 +5,100 @@ import (
 	"testing"
 )
 
-type mockWriter struct {
+func TestNewDiamondInfo(t *testing.T) {
+	var happyTests = []struct {
+		input    DiamondInfo
+		expected DiamondInfo
+	}{
+		{NewDiamondInfo("A", 0), DiamondInfo{MiddleLetter: "A", IsA: true, MiddleWidth: 0}},
+		{NewDiamondInfo("Z", 47), DiamondInfo{MiddleLetter: "Z", IsA: false, MiddleWidth: 47}},
+	}
+
+	for _, test := range happyTests {
+		if areNotEqualx(test.input, test.expected) {
+			t.Errorf("Expected %s \n Got %s \n", test.expected, test.input)
+		}
+	}
 }
 
 //Test to ensure the output display is correct
 func TestDrawTheDumbDiamond(t *testing.T) {
-	input := NewLetters("A", "B", "C", "D", "E")
-	expected := `
-    A
-   B B
-  C   C
- D     D
-E       E
- D     D
-  C   C
-   B B
-    A
+	// 	input := NewLetters("A", "B", "C", "D", "E")
+	// 	expectedZ := `
+	// 		                       A
+	// 	                        B B
+	// 	                       C   C
+	// 	                      D     D
+	// 	                     E       E
+	// 	                    F         F
+	// 	                   G           G
+	// 	                  H             H
+	// 	                 I               I
+	// 	                J                 J
+	// 	               K                   K
+	// 	              L                     L
+	// 	             M                       M
+	// 	            N                         N
+	// 	           O                           O
+	// 	          P                             P
+	// 	         Q                               Q
+	// 	        R                                 R
+	// 	       S                                   S
+	// 	      T                                     T
+	// 	     U                                       U
+	// 	    V                                         V
+	// 	   W                                           W
+	// 	  X                                             X
+	// 	 Y                                               Y
+	// 	Z                                                 Z
+	// 	 Y                                               Y
+	// 	  X                                             X
+	// 	   W                                           W
+	// 	    V                                         V
+	// 	     U                                       U
+	// 	      T                                     T
+	// 	       S                                   S
+	// 	        R                                 R
+	// 	         Q                               Q
+	// 	          P                             P
+	// 	           O                           O
+	// 	            N                         N
+	// 	             M                       M
+	// 	              L                     L
+	// 	               K                   K
+	// 	                J                 J
+	// 	                 I               I
+	// 	                  H             H
+	// 	                   G           G
+	// 	                    F         F
+	// 	                     E       E
+	// 	                      D     D
+	// 	                       C   C
+	// 	                        B B
+	// 		                       A
+	// `
 
-`
+	// buffer := new(bytes.Buffer)
+	//
+	// DrawTheDumbDiamond(buffer, input)
+	//
+	// if buffer.String() != expected {
+	// 	t.Errorf("got \n %s, Expected \n %s", buffer.String(), expected)
+	// }
 
-	buffer := new(bytes.Buffer)
+	var happyTests = []struct {
+		input    DiamondInfo
+		expected string
+	}{
+		{DiamondInfo{MiddleLetter: "A", IsA: true, MiddleWidth: 0}, "A"},
+	}
 
-	DrawTheDumbDiamond(buffer, input)
-
-	if buffer.String() != expected {
-		t.Errorf("got \n %s, Expected \n %s", buffer.String(), expected)
+	for _, test := range happyTests {
+		buffer := new(bytes.Buffer)
+		DrawD(buffer, test.input)
+		if buffer.String() != test.expected {
+			t.Errorf("Expected %s \n Got %s \n", test.expected, buffer.String())
+		}
 	}
 
 }
@@ -107,6 +176,17 @@ func TestGetLettersForTheDiamond(t *testing.T) {
 				test.input, test.expected, result)
 		}
 	}
+}
+
+func areNotEqualx(item1, item2 DiamondInfo) bool {
+	if item1.IsA != item2.IsA {
+		return true
+	} else if item1.MiddleLetter != item2.MiddleLetter {
+		return true
+	} else if item1.MiddleWidth != item2.MiddleWidth {
+		return true
+	}
+	return false
 }
 
 //a custom assertion for the Letter type

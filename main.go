@@ -7,7 +7,6 @@ import (
 	"os"
 	"regexp"
 	"strings"
-	"time"
 )
 
 var letter *string
@@ -55,7 +54,6 @@ func figureOutTheWidth(letter string) int {
 }
 
 func main() {
-	start := time.Now()
 
 	if input, err := Parse(*letter); err != nil {
 		fmt.Println(err.Error())
@@ -63,8 +61,6 @@ func main() {
 		DrawJamesAPrettyDiamond(os.Stdout, NewDiamondInfo(input))
 	}
 
-	duration := time.Now().Sub(start)
-	fmt.Printf("Joes app internal method timing = %s \n", duration)
 }
 
 //DrawJamesAPrettyDiamond will draw a diamond with the alphabet to the given
